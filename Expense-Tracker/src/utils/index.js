@@ -16,7 +16,11 @@ export const exportToCSV = (data, filename = 'expenses.csv') => {
   const rows = data.map(item => 
     `${item.date},"${item.category}","${item.description || ''}",${item.amount}`
   );
-  const csv = [headers, ...rows].join('\n');
+  
+  const total = data.reduce((sum, item) => sum + item.amount, 0);
+  const totalRow = `,,Total,${total.toFixed(2)}`;
+  
+  const csv = [headers, ...rows, '', totalRow].join('\n');
   
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
