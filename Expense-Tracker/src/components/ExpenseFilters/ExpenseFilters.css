@@ -7,9 +7,40 @@
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   width: 100%;
   color: white;
+}
+
+.date-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-start;
+}
+
+.date-filter-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ecf0f1;
+  margin: 0;
+}
+
+.date-range-error {
+  width: 100%;
+  color: #e74c3c;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(231, 76, 60, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #e74c3c;
+  margin-top: 10px;
+}
+
+.expense-filters input.error {
+  border-color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.1);
 }
 
 @media (max-width: 768px) {

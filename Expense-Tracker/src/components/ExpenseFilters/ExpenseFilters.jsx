@@ -1,12 +1,31 @@
+import { useState } from 'react';
 import { EXPENSE_CATEGORIES } from '../../constants';
 import { generateYearOptions } from '../../utils';
 import './ExpenseFilters.css';
 
 const ExpenseFilters = ({ filter, onFilterChange, onClearFilters, onExportCSV }) => {
   const years = generateYearOptions();
+  const [errors, setErrors] = useState({});
+
+  const validateDateRange = (fromDate, toDate) => {
+    const newErrors = {};
+    
+    if (fromDate && toDate && new Date(fromDate) > new Date(toDate)) {
+      newErrors.dateRange = 'From date cannot be later than To date';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleFilterChange = (field, value) => {
-    onFilterChange({ ...filter, [field]: value });
+    const newFilter = { ...filter, [field]: value };
+    
+    if (field === 'fromDate' || field === 'toDate') {
+      validateDateRange(newFilter.fromDate, newFilter.toDate);
+    }
+    
+    onFilterChange(newFilter);
   };
 
   return (
@@ -21,17 +40,29 @@ const ExpenseFilters = ({ filter, onFilterChange, onClearFilters, onExportCSV })
         ))}
       </select>
       
-      <input
-        type="date"
-        value={filter.fromDate}
-        onChange={(e) => handleFilterChange('fromDate', e.target.value)}
-      />
+      <div className="date-filter-group">
+        <label>From Date:</label>
+        <input
+          type="date"
+          value={filter.fromDate}
+          onChange={(e) => handleFilterChange('fromDate', e.target.value)}
+          className={errors.dateRange ? 'error' : ''}
+        />
+      </div>
       
-      <input
-        type="date"
-        value={filter.toDate}
-        onChange={(e) => handleFilterChange('toDate', e.target.value)}
-      />
+      <div className="date-filter-group">
+        <label>To Date:</label>
+        <input
+          type="date"
+          value={filter.toDate}
+          onChange={(e) => handleFilterChange('toDate', e.target.value)}
+          className={errors.dateRange ? 'error' : ''}
+        />
+      </div>
+      
+      {errors.dateRange && (
+        <span className="error-message date-range-error">{errors.dateRange}</span>
+      )}
       
       <select
         value={filter.year}

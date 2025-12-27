@@ -1,17 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EXPENSE_CATEGORIES } from "../../constants";
 import "./ExpenseForm.css";
 
 const ExpenseForm = ({ onSubmit, editExpense, onCancel }) => {
-  const [form, setForm] = useState(
-    editExpense || {
-      amount: "",
-      category: "",
-      description: "",
-      date: "",
-    }
-  );
+  const [form, setForm] = useState({
+    amount: "",
+    category: "",
+    description: "",
+    date: "",
+  });
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (editExpense) {
+      setForm({
+        amount: editExpense.amount.toString(),
+        category: editExpense.category,
+        description: editExpense.description || "",
+        date: editExpense.date,
+      });
+    } else {
+      setForm({
+        amount: "",
+        category: "",
+        description: "",
+        date: "",
+      });
+    }
+    setErrors({});
+  }, [editExpense]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -44,7 +61,9 @@ const ExpenseForm = ({ onSubmit, editExpense, onCancel }) => {
     if (!validateForm()) return;
 
     onSubmit({ ...form, amount: parseFloat(form.amount) });
-    setForm({ amount: "", category: "", description: "", date: "" });
+    if (!editExpense) {
+      setForm({ amount: "", category: "", description: "", date: "" });
+    }
     setErrors({});
   };
 
