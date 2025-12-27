@@ -11,7 +11,7 @@ import './App.css';
 
 function App() {
   const [expenses, setExpenses] = useLocalStorage('expenses', []);
-  const [filter, setFilter] = useState({ category: '', date: '', year: '' });
+  const [filter, setFilter] = useState({ category: '', fromDate: '', toDate: '', year: '' });
   const [editExpense, setEditExpense] = useState(null);
   const [selectedExpenses, setSelectedExpenses] = useState([]);
 
@@ -47,7 +47,7 @@ function App() {
   };
 
   const handleClearFilters = () => {
-    setFilter({ category: '', date: '', year: '' });
+    setFilter({ category: '', fromDate: '', toDate: '', year: '' });
   };
 
   const handleExportCSV = () => {

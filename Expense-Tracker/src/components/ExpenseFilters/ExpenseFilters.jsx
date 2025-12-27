@@ -23,8 +23,14 @@ const ExpenseFilters = ({ filter, onFilterChange, onClearFilters, onExportCSV })
       
       <input
         type="date"
-        value={filter.date}
-        onChange={(e) => handleFilterChange('date', e.target.value)}
+        value={filter.fromDate}
+        onChange={(e) => handleFilterChange('fromDate', e.target.value)}
+      />
+      
+      <input
+        type="date"
+        value={filter.toDate}
+        onChange={(e) => handleFilterChange('toDate', e.target.value)}
       />
       
       <select

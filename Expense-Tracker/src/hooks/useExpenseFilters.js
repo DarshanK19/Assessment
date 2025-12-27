@@ -4,10 +4,13 @@ export const useExpenseFilters = (expenses, filters) => {
   return useMemo(() => {
     return expenses.filter(expense => {
       const categoryMatch = !filters.category || expense.category === filters.category;
-      const dateMatch = !filters.date || expense.date === filters.date;
+      
+      const fromDateMatch = !filters.fromDate || expense.date >= filters.fromDate;
+      const toDateMatch = !filters.toDate || expense.date <= filters.toDate;
+      
       const yearMatch = !filters.year || expense.date.startsWith(filters.year);
       
-      return categoryMatch && dateMatch && yearMatch;
+      return categoryMatch && fromDateMatch && toDateMatch && yearMatch;
     });
   }, [expenses, filters]);
 };
