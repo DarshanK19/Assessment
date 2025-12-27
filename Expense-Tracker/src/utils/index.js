@@ -12,10 +12,13 @@ export const generateYearOptions = (count = 5) => {
 };
 
 export const exportToCSV = (data, filename = 'expenses.csv') => {
-  const csv = 'Date,Category,Description,Amount\\n' + 
-    data.map(item => `${item.date},${item.category},${item.description},${item.amount}`).join('\\n');
+  const headers = 'Date,Category,Description,Amount';
+  const rows = data.map(item => 
+    `${item.date},"${item.category}","${item.description || ''}",${item.amount}`
+  );
+  const csv = [headers, ...rows].join('\n');
   
-  const blob = new Blob([csv], { type: 'text/csv' });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;

@@ -1,8 +1,8 @@
 .expense-form {
-  background: white;
+  background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
   padding: 25px;
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   margin-bottom: 25px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -108,7 +108,15 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(
+    to right,
+    #ff8177 0%,
+    #ff867a 0%,
+    #ff8c7f 21%,
+    #f99185 52%,
+    #cf556c 78%,
+    #b12a5b 100%
+  );
   color: white;
   font-family: inherit;
   -webkit-appearance: none;

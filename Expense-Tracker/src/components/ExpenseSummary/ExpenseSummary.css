@@ -1,11 +1,11 @@
 .expense-summary {
-  background: #2c3e50;
+  background: linear-gradient(to top, #48c6ef 0%, #6f86d6 100%);
   padding: 25px;
   border-radius: 15px;
   margin-bottom: 25px;
   text-align: center;
   color: white;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
@@ -13,7 +13,7 @@
     padding: 15px;
     margin-bottom: 15px;
   }
-  
+
   .expense-summary h2 {
     font-size: 1.8rem;
   }
