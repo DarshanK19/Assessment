@@ -1,35 +1,91 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import { useLocalStorage } from './hooks/useLocalStorage';
+import { useExpenseFilters, useExpenseStats } from './hooks/useExpenseFilters';
+import { exportToCSV } from './utils';
+import ExpenseForm from './components/ExpenseForm/ExpenseForm';
+import ExpenseFilters from './components/ExpenseFilters/ExpenseFilters';
+import ExpenseSummary from './components/ExpenseSummary/ExpenseSummary';
+import ExpenseList from './components/ExpenseList/ExpenseList';
+import ExpenseChart from './components/ExpenseChart/ExpenseChart';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [expenses, setExpenses] = useLocalStorage('expenses', []);
+  const [filter, setFilter] = useState({ category: '', date: '', year: '' });
+  const [editExpense, setEditExpense] = useState(null);
+  const [selectedExpenses, setSelectedExpenses] = useState([]);
+
+  const filteredExpenses = useExpenseFilters(expenses, filter);
+  const { total, count } = useExpenseStats(filteredExpenses);
+
+  const handleAddExpense = (expense) => {
+    if (editExpense) {
+      setExpenses(expenses.map(exp => 
+        exp.id === editExpense.id ? { ...expense, id: editExpense.id } : exp
+      ));
+      setEditExpense(null);
+    } else {
+      setExpenses([...expenses, { ...expense, id: Date.now() }]);
+    }
+  };
+
+  const handleEditExpense = (expense) => {
+    setEditExpense(expense);
+  };
+
+  const handleDeleteExpense = (id) => {
+    setExpenses(expenses.filter(exp => exp.id !== id));
+  };
+
+  const handleBulkDelete = () => {
+    setExpenses(expenses.filter(exp => !selectedExpenses.includes(exp.id)));
+    setSelectedExpenses([]);
+  };
+
+  const handleCancelEdit = () => {
+    setEditExpense(null);
+  };
+
+  const handleClearFilters = () => {
+    setFilter({ category: '', date: '', year: '' });
+  };
+
+  const handleExportCSV = () => {
+    exportToCSV(filteredExpenses);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="app">
+      <h1>Expense Tracker</h1>
+      
+      <ExpenseForm 
+        onSubmit={handleAddExpense}
+        editExpense={editExpense}
+        onCancel={handleCancelEdit}
+      />
+
+      <div className="summary-filters-container">
+        <ExpenseSummary total={total} count={count} />
+        <ExpenseFilters
+          filter={filter}
+          onFilterChange={setFilter}
+          onClearFilters={handleClearFilters}
+          onExportCSV={handleExportCSV}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <ExpenseList
+        expenses={filteredExpenses}
+        onEdit={handleEditExpense}
+        onDelete={handleDeleteExpense}
+        selectedExpenses={selectedExpenses}
+        onSelectionChange={setSelectedExpenses}
+        onBulkDelete={handleBulkDelete}
+      />
+
+      {expenses.length > 0 && <ExpenseChart expenses={filteredExpenses} />}
+    </div>
+  );
 }
 
-export default App
+export default App;
